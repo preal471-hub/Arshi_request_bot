@@ -2,6 +2,8 @@ import telebot
 import json
 import os
 import threading
+import requests
+import base64
 from flask import Flask
 
 TOKEN = os.getenv("BOT_TOKEN")
@@ -132,3 +134,4 @@ if __name__ == "__main__":
     threading.Thread(target=run_web).start()
 
     bot.infinity_polling()
+
