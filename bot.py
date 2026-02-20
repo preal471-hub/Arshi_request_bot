@@ -12,16 +12,35 @@ USERS_FILE = "users.json"
 
 # ---------------- LOAD / SAVE USERS ---------------- #
 
-def load_users():
-    try:
-        with open(USERS_FILE, "r") as f:
-            return json.load(f)
-    except:
-        return []
+import requests
+import base64
 
-def save_users(users):
-    with open(USERS_FILE, "w") as f:
-        json.dump(users, f)
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+REPO = "preal471-hub/Arshi_request_bot"
+FILE_PATH = "users.json"
+
+def get_users():
+    url = f"https://api.github.com/repos/{REPO}/contents/{FILE_PATH}"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    r = requests.get(url, headers=headers).json()
+    content = base64.b64decode(r["content"]).decode()
+    users = json.loads(content)
+    sha = r["sha"]
+    return users, sha
+
+def save_user(user_id):
+    users, sha = get_users()
+    if user_id not in users:
+        users.append(user_id)
+
+        url = f"https://api.github.com/repos/{REPO}/contents/{FILE_PATH}"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+        data = {
+            "message": "update users",
+            "content": base64.b64encode(json.dumps(users).encode()).decode(),
+            "sha": sha
+        }
+        requests.put(url, headers=headers, json=data)
 
 # ---------------- JOIN REQUEST HANDLER ---------------- #
 
@@ -111,4 +130,5 @@ def run_web():
 if __name__ == "__main__":
     print("Bot running...")
     threading.Thread(target=run_web).start()
+
     bot.infinity_polling()
