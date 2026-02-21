@@ -118,7 +118,7 @@ def start(message):
 def broadcast_text(message):
 
     if message.from_user.id not in OWNER_IDS:
-    return
+        return
 
     text = message.text.replace("/broadcast ", "")
     users = load_users()
@@ -132,14 +132,13 @@ def broadcast_text(message):
             pass
 
     bot.reply_to(message, f"✅ Text sent to {sent} users")
-
 # ================== BROADCAST PHOTO ================== #
 
 @bot.message_handler(commands=['broadcastphoto'])
 def broadcast_photo(message):
 
     if message.from_user.id not in OWNER_IDS:
-    return
+        return
 
     msg = bot.reply_to(message, "📸 Send photo with caption")
     bot.register_next_step_handler(msg, process_photo)
@@ -208,6 +207,7 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
 
 
 
