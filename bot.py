@@ -187,7 +187,7 @@ def verify_user(call):
         "🤖 Bot Connected Successfully!\n\n"
         "You will now receive premium trading updates here 📈"
     )
-    @bot.message_handler(commands=['stats'])
+   @bot.message_handler(commands=['stats'])
 def stats(message):
 
     if message.from_user.id not in OWNER_IDS:
@@ -199,10 +199,7 @@ def stats(message):
     except:
         total_users = "Error reading DB"
 
-    bot.reply_to(
-        message,
-        f"👥 Total Users : {total_users}"
-    )
+    bot.reply_to(message, f"👥 Total Users : {total_users}")
 # ================== FLASK SERVER (Railway) ================== #
 
 app = Flask(__name__)
@@ -223,6 +220,7 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
 
 
 
