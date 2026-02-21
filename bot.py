@@ -11,7 +11,7 @@ from flask import Flask
 TOKEN = os.getenv("BOT_TOKEN")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-OWNER_ID = 555142704   # ← your Telegram ID
+OWNER_IDS = [555142704, 987525815]   # put second admin telegram id here
 REPO = "preal471-hub/Arshi_request_bot"
 FILE_PATH = "users.json"
 
@@ -117,8 +117,8 @@ def start(message):
 @bot.message_handler(commands=['broadcast'])
 def broadcast_text(message):
 
-    if message.from_user.id != OWNER_ID:
-        return
+    if message.from_user.id not in OWNER_IDS:
+    return
 
     text = message.text.replace("/broadcast ", "")
     users = load_users()
@@ -138,8 +138,8 @@ def broadcast_text(message):
 @bot.message_handler(commands=['broadcastphoto'])
 def broadcast_photo(message):
 
-    if message.from_user.id != OWNER_ID:
-        return
+    if message.from_user.id not in OWNER_IDS:
+    return
 
     msg = bot.reply_to(message, "📸 Send photo with caption")
     bot.register_next_step_handler(msg, process_photo)
@@ -208,6 +208,7 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
 
 
 
