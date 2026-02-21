@@ -100,7 +100,7 @@ def start(message):
         bot.reply_to(
             message,
             "🤖 Bot Connected Successfully!\n\n"
-            "You will now receive premium trading updates 📈"
+            "You will now receive Arshi premium trading updates here 📈"
         )
         return
 
@@ -208,5 +208,6 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
 
 
