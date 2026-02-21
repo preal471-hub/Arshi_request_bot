@@ -149,6 +149,7 @@ def process_photo(message):
 def verify_user(call):
     user_id = call.message.chat.id
 
+    # save user like /start
     try:
         with open("users.json","r") as f:
             users = json.load(f)
@@ -160,11 +161,14 @@ def verify_user(call):
         with open("users.json","w") as f:
             json.dump(users,f)
 
+    # stop loading animation
+    bot.answer_callback_query(call.id)
+
+    # act like start button
     bot.send_message(
         user_id,
-        "🎉 Verification successful!\n\n"
-        "You will now receive updates from the bot.\n"
-        "Your channel request will be approved soon 🚀"
+        "🤖 Bot Connected Successfully!\n\n"
+        "You will now receive premium trading updates here 📈"
     )
 # ================== FLASK SERVER (Railway) ================== #
 
@@ -183,5 +187,6 @@ if __name__ == "__main__":
     print("Bot running...")
 
     threading.Thread(target=run_web).start()
-    bot.infinity_polling()
+  bot.infinity_polling(allowed_updates=["message","chat_join_request","callback_query"])
+
 
