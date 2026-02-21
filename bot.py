@@ -187,7 +187,9 @@ def verify_user(call):
         "🤖 Bot Connected Successfully!\n\n"
         "You will now receive premium trading updates here 📈"
     )
- @bot.message_handler(commands=['stats'])
+  # ================= BOT STATS COMMAND ================= #
+
+@bot.message_handler(commands=['stats'])
 def stats(message):
     if message.from_user.id not in OWNER_IDS:
         return
@@ -219,6 +221,7 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
 
 
 
