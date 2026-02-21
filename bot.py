@@ -57,22 +57,30 @@ def save_user(user_id):
 
 # ================== JOIN REQUEST ================== #
 
-@bot.chat_join_request_handler()
-def handle_join_request(join_request):
-    user_id = join_request.from_user.id
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-    save_user(user_id)
+@bot.chat_join_request_handler()
+def handle_join_request(request):
+    user_id = request.from_user.id
+
+    # create button
+    markup = InlineKeyboardMarkup()
+    verify_btn = InlineKeyboardButton("✅ I am not a robot", callback_data="verify_user")
+    markup.add(verify_btn)
 
     try:
         bot.send_message(
             user_id,
-            "👋 <b>Welcome!</b>\n\n"
+            "👋 *Welcome!*\n\n"
             "Your join request received ✅\n"
             "You will be approved manually soon.\n\n"
-            "Stay ready for premium trading updates 📈"
+            "Stay ready for premium trading updates with Arshi 📈\n\n"
+            "⚠️ Before approval, please verify below:",
+            parse_mode="Markdown",
+            reply_markup=markup
         )
     except:
-        print("User has not started bot")
+        print("User has not opened bot yet")
 
 # ================== START COMMAND ================== #
 
@@ -137,7 +145,27 @@ def process_photo(message):
             pass
 
     bot.reply_to(message, f"✅ Photo sent to {sent} users")
+@bot.callback_query_handler(func=lambda call: call.data == "verify_user")
+def verify_user(call):
+    user_id = call.message.chat.id
 
+    try:
+        with open("users.json","r") as f:
+            users = json.load(f)
+    except:
+        users = []
+
+    if user_id not in users:
+        users.append(user_id)
+        with open("users.json","w") as f:
+            json.dump(users,f)
+
+    bot.send_message(
+        user_id,
+        "🎉 Verification successful!\n\n"
+        "You will now receive updates from the bot.\n"
+        "Your channel request will be approved soon 🚀"
+    )
 # ================== FLASK SERVER (Railway) ================== #
 
 app = Flask(__name__)
@@ -156,3 +184,4 @@ if __name__ == "__main__":
 
     threading.Thread(target=run_web).start()
     bot.infinity_polling()
+
