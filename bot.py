@@ -63,12 +63,13 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 def handle_join_request(request):
     user_id = request.from_user.id
 
-    # create button
+    # create button (START deep link)
     markup = InlineKeyboardMarkup()
-   verify_btn = InlineKeyboardButton(
-    "✅ I am not a robot",
-    url=f"https://t.me/{bot.get_me().username}?start=verify"
-)
+    verify_btn = InlineKeyboardButton(
+        "✅ I am not a robot",
+        url=f"https://t.me/{bot.get_me().username}?start=verify"
+    )
+    markup.add(verify_btn)
 
     try:
         bot.send_message(
@@ -82,7 +83,7 @@ def handle_join_request(request):
             reply_markup=markup
         )
     except:
-        print("User has not opened bot yet")
+        print("User hasn't started bot yet")
 
 # ================== START COMMAND ================== #
 
@@ -207,4 +208,5 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
 
