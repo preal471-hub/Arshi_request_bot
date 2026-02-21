@@ -181,12 +181,12 @@ def home():
 def run_web():
     app.run(host="0.0.0.0", port=8080)
 
-# ================== MAIN ================== #
-
+# ================== MAIN ==================
 if __name__ == "__main__":
     print("Bot running...")
 
     threading.Thread(target=run_web).start()
-  bot.infinity_polling(allowed_updates=["message","chat_join_request","callback_query"])
 
-
+    bot.infinity_polling(
+        allowed_updates=["message","chat_join_request","callback_query"]
+    )
