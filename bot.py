@@ -65,8 +65,10 @@ def handle_join_request(request):
 
     # create button
     markup = InlineKeyboardMarkup()
-    verify_btn = InlineKeyboardButton("✅ I am not a robot", callback_data="verify_user")
-    markup.add(verify_btn)
+   verify_btn = InlineKeyboardButton(
+    "✅ I am not a robot",
+    url=f"https://t.me/{bot.get_me().username}?start=verify"
+)
 
     try:
         bot.send_message(
@@ -86,14 +88,29 @@ def handle_join_request(request):
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    save_user(message.chat.id)
+    user_id = message.chat.id
+
+    # check if user came from verify button
+    args = message.text.replace("/start","").strip()
+
+    if args == "verify":
+        save_user(user_id)
+
+        bot.reply_to(
+            message,
+            "🤖 Bot Connected Successfully!\n\n"
+            "You will now receive premium trading updates 📈"
+        )
+        return
+
+    # normal start
+    save_user(user_id)
 
     bot.reply_to(
         message,
-        "🤖 Bot Connected Successfully!\n\n"
-        "You will receive updates here."
+        "👋 Welcome!\n\n"
+        "Click the channel link and send join request."
     )
-
 # ================== BROADCAST TEXT ================== #
 
 @bot.message_handler(commands=['broadcast'])
@@ -190,3 +207,4 @@ if __name__ == "__main__":
     bot.infinity_polling(
         allowed_updates=["message","chat_join_request","callback_query"]
     )
+
